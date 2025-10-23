@@ -1,0 +1,79 @@
+services:
+  # 1. Dịch vụ Frontend (React Dev Server)
+  frontend:
+    container_name: frontend_service
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app       # Mount code React của bạn vào container
+      - /app/node_modules     # Tránh mount đè thư mục node_modules
+    ports:
+      - "3000:3000"           # Mở port 3000 (React Dev Server)
+    # Lệnh npm start đã là CMD trong Dockerfile-fe nên không cần command ở đây
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Giúp hot-reload hoạt động ổn định
+    depends_on:
+      - backend
+
+  # 2. Dịch vụ Backend (Flask Dev Server)
+  backend:
+    container_name: backend_service
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"          # Mở port 5000 (Flask Dev Server)
+    env_file:
+      - ./.env       # Đọc file .env từ thư mục backend
+    environment:
+      # Kết nối tới service bằng TÊN
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
+      REDIS_URL: redis://${REDIS_HOST}:6379/0
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./backend:/app     # Mount code Flask của bạn để hot-reload
+      - uploads_data:/app/uploads # Lưu ảnh
+    # Lệnh chạy flask dev server đã là CMD trong Dockerfile-be
+
+  # 3. Dịch vụ Database (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: db_service
+    env_file:
+      - ./.env       # Dùng chung file .env
+    ports:
+      - "3306:3306"          # Mở port để debug bằng tool (MySQL Workbench)
+    volumes:
+      - ./backend/db:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql 
+
+  # 4. Dịch vụ Cache (Redis)
+  redis:
+    image: redis:6-alpine
+    container_name: redis_service
+    ports:
+      - "6379:6379"          # Mở port để debug bằng tool (RedisInsight)
+    volumes:
+      - redis_data:/data     
+
+  # 5. Dịch vụ chạy Job (Train mô hình)
+  recommender_job:
+    build:
+      context: ./backend
+    container_name: job_service
+    command: ["python", "jobs/run_training.py"] # Ghi đè CMD để chạy script
+    env_file:
+      - ./.env
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
+      REDIS_URL: redis://${REDIS_HOST}:6379/0
+    depends_on:
+      - db
+      - redis
+
+# Định nghĩa các ổ đĩa ảo (volumes) để lưu trữ dữ liệu
+volumes:
+  mysql_data:
+  redis_data:
+  uploads_data:
