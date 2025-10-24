@@ -33,8 +33,9 @@ services:
       - redis
     volumes:
       - ./backend:/app     # Mount code Flask của bạn để hot-reload
-      - uploads_data:/app/uploads # Lưu ảnh
-    # Lệnh chạy flask dev server đã là CMD trong Dockerfile-be
+      - ./backend/uploads:/app/uploads # Mount to host
+#      - uploads_data:/app/uploads # use this to mount to docker volume (need uncomment docker volume below)
+
 
   # 3. Dịch vụ Database (MySQL)
   db:
@@ -76,4 +77,4 @@ services:
 volumes:
   mysql_data:
   redis_data:
-  uploads_data:
+#  uploads_data: # use when mount upload folder to docker volume

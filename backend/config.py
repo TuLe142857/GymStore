@@ -10,3 +10,6 @@ class Config:
 
     # jwt
     JWT_SECRET_KEY = os.environ.get('SECRET_KEY')
+
+    # image uploads (from local) directory
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER')
