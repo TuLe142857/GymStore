@@ -4,6 +4,7 @@ services:
     container_name: frontend_service
     build:
       context: ./frontend
+    restart: unless-stopped
     volumes:
       - ./frontend:/app       # Mount code React của bạn vào container
       - /app/node_modules     # Tránh mount đè thư mục node_modules
@@ -20,6 +21,7 @@ services:
     container_name: backend_service
     build:
       context: ./backend
+    restart: unless-stopped
     ports:
       - "5000:5000"          # Mở port 5000 (Flask Dev Server)
     env_file:
@@ -29,8 +31,10 @@ services:
       DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
       REDIS_URL: redis://${REDIS_HOST}:6379/0
     depends_on:
-      - db
-      - redis
+      db:
+          condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./backend:/app     # Mount code Flask của bạn để hot-reload
       - ./backend/uploads:/app/uploads # Mount to host
@@ -41,6 +45,7 @@ services:
   db:
     image: mysql:8.0
     container_name: db_service
+    restart: unless-stopped
     env_file:
       - ./.env       # Dùng chung file .env
     ports:
@@ -48,15 +53,27 @@ services:
     volumes:
       - ./backend/db:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql 
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   # 4. Dịch vụ Cache (Redis)
   redis:
     image: redis:6-alpine
     container_name: redis_service
+    restart: unless-stopped
     ports:
       - "6379:6379"          # Mở port để debug bằng tool (RedisInsight)
     volumes:
-      - redis_data:/data     
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # 5. Dịch vụ chạy Job (Train mô hình)
   recommender_job:
@@ -70,8 +87,10 @@ services:
       DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
       REDIS_URL: redis://${REDIS_HOST}:6379/0
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
 # Định nghĩa các ổ đĩa ảo (volumes) để lưu trữ dữ liệu
 volumes:
