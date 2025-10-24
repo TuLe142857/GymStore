@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 5000
 
 # Lệnh mặc định để chạy server dev của Flask
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+CMD ["python", "run.py"]
