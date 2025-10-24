@@ -89,7 +89,8 @@ class Feedback(db.Model):
     product_id = Column(Integer, ForeignKey('product.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False)
     rating = Column(Integer, nullable=False)
     comment = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=func.now())
+    created_at = Column(DateTime, default=func.now(), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, default=func.now(), server_default=func.now(), server_onupdate=func.now(), onupdate=func.now(), nullable=False)
 
     # Relationship
     user = relationship('User', back_populates='feedbacks')
@@ -107,7 +108,7 @@ class Interaction(db.Model):
     user_id = Column(Integer, ForeignKey('user.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False)
     product_id = Column(Integer, ForeignKey('product.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False)
     type = Column(Enum(InteractionType), nullable=False)
-    timestamp = Column(DateTime, default=func.now())
+    timestamp = Column(DateTime, default=func.now(), server_default=func.now())
 
     # Relationship
     user = relationship('User', back_populates='interactions')

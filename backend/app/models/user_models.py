@@ -1,10 +1,15 @@
 from . import db
+import enum
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, Date, Text, text, ForeignKey
+    Column, Integer, String, Boolean, DateTime, Date, Text, Enum, text, ForeignKey
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
+class Gender(enum.Enum):
+    MALE = 'MALE'
+    FEMALE = 'FEMALE'
+    OTHER = 'OTHER'
 
 class Role(db.Model):
     __tablename__ = 'role'
@@ -44,6 +49,7 @@ class UserInfor(db.Model):
 
     user_id = Column(Integer, ForeignKey('user.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True, nullable=False)
     full_name = Column(String(100), nullable=False)
+    gender = Column(Enum(Gender), nullable=True)
     phone_number = Column(String(20), unique=True, nullable=True)
     date_of_birth = Column(Date, nullable=True)
     address = Column(Text, nullable=True)
