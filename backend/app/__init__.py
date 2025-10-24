@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from .api import api_bp
 from .admin_routes import admin_bp
 from .models import db
-from .error_handler import init_error_handler, BaseAppError
+from .errors import init_error_handler
 
 # jwt
 jwt = JWTManager()
@@ -55,6 +55,10 @@ def create_app(config_class=None):
     db.init_app(app)
     jwt.init_app(app)
     init_error_handler(app)
+
+    # create db if not exist
+    with app.app_context():
+        db.create_all()
 
     # api route
     app.register_blueprint(api_bp)
