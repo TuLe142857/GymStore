@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận đăng ký tài khoản</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333333;
+        }
+        p {
+            color: #555555;
+            line-height: 1.5;
+        }
+        .otp {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Chào bạn!</h2>
+        <p>Cảm ơn bạn đã đăng ký tài khoản tại website của chúng tôi.</p>
+        <p>Mã OTP xác nhận của bạn là:</p>
+        <div class="otp">{{ otp }}</div>
+        <p>Hoặc bạn có thể xác nhận tài khoản bằng cách nhấn vào nút bên dưới:</p>
+        <a href="{{ confirm_link }}" class="btn">Xác nhận tài khoản</a>
+        <p class="footer">
+            Nếu bạn không yêu cầu đăng ký tài khoản, hãy bỏ qua email này.
+        </p>
+    </div>
+</body>
+</html>

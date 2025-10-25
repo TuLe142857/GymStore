@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 from .api import api_bp
 from .admin_routes import admin_bp
-from .extensions import db, jwt
+from .extensions import db, jwt, mail, redis_client
 from .errors import init_error_handler
 from .commands import register_commands
 
@@ -14,8 +14,9 @@ def create_app(config_class):
     CORS(app)
 
     db.init_app(app)
-
+    mail.init_app(app)
     jwt.init_app(app)
+    redis_client.init_app(app)
 
     init_error_handler(app)
 
