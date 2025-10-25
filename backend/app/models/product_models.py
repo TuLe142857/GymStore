@@ -1,4 +1,4 @@
-from . import db
+from ..extensions import db
 from sqlalchemy import (
     Column, Integer, String, Text, Float, Numeric, Boolean, text,
     DateTime, ForeignKey

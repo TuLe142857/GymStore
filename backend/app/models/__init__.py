@@ -1,6 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from ..extensions import db
 
 from .user_models import User, Role, UserInfor
 from .product_models import Product, Category, Brand, Ingredient, ProductIngredient

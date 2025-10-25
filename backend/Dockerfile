@@ -20,4 +20,5 @@ COPY . .
 EXPOSE 5000
 
 # Lệnh mặc định để chạy server dev của Flask
-CMD ["python", "run.py"]
+#CMD ["python", "run.py"]
+CMD ["flask", "run", "--host=0.0.0.0"]
