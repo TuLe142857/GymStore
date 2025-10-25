@@ -26,8 +26,14 @@ class Product(db.Model):
     name = Column(String(255), nullable=False)
     desc = Column(Text, nullable=True)
     image_url = Column(String(255), nullable=True)
-    weight_grams = Column(Float, nullable=False)
-    serving_size_grams = Column(Float, nullable=False)
+
+    # weight_grams = Column(Float, nullable=False)
+    # serving_size_grams = Column(Float, nullable=False)
+    package_quantity = Column(Float, nullable=False)
+    package_unit = Column(String(20), nullable=False)
+    serving_quantity = Column(Float, nullable=False)
+    serving_unit = Column(String(20), nullable=False)
+
     price = Column(Integer, nullable=False)
     stock_quantity = Column(Integer, nullable=False, default=0, server_default=text("0"))
     is_active = Column(Boolean, nullable=False, default=True, server_default=text("TRUE"))
