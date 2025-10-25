@@ -1,4 +1,4 @@
-from . import db
+from ..extensions import db
 import enum
 from sqlalchemy import (
     Column, Integer, String, Boolean, DateTime, Date, Text, Enum, text, ForeignKey

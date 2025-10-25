@@ -1,8 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
+from ..extensions import db
 
-db = SQLAlchemy()
-
-from .user_models import User, Role, UserInfor
+from .user_models import User, Role, UserInfor, Gender
 from .product_models import Product, Category, Brand, Ingredient, ProductIngredient
 from .ecommerce_models import (
     Cart, CartItem,
@@ -13,7 +11,7 @@ from .ecommerce_models import (
 
 __all__ = [
     'db',
-    'User', 'Role', 'UserInfor',
+    'User', 'Role', 'UserInfor', 'Gender',
     'Product', 'Category', 'Brand', 'Ingredient', 'ProductIngredient',
     'Cart', 'CartItem',
     'Order', 'OrderItem', 'OrderStatus',

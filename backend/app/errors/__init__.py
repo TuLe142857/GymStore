@@ -1,5 +1,5 @@
 from .app_errors import *
-from app.models import db
+from ..extensions import db
 from flask import jsonify
 from werkzeug.exceptions import MethodNotAllowed, NotFound
 
