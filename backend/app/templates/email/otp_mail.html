@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Mã xác nhận</title>
+  <style>
+    body {
+      background-color: #f4f6f8;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background: #ffffff;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo h1 {
+      font-size: 20px;
+      color: #4a90e2;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .otp-box {
+      text-align: center;
+      background: #f0f4ff;
+      border: 1px dashed #4a90e2;
+      color: #2c3e50;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      border-radius: 8px;
+      padding: 15px 0;
+      margin: 25px 0;
+    }
+    .note {
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .footer {
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      margin-top: 30px;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <h1>GymStore</h1>
+    </div>
+    <div class="greeting">
+      Xin chào <strong>{{ user_name }}</strong>,
+    </div>
+    <p>Bạn vừa yêu cầu một mã xác nhận. Mã OTP của bạn là:</p>
+    <div class="otp-box">{{ otp }}</div>
+    <p style="text-align:center;">Mã này có hiệu lực trong <strong>{{ expire_minutes or 5 }}</strong> phút.</p>
+    <div class="note">
+      Nếu bạn không yêu cầu hành động này, vui lòng bỏ qua email này.
+    </div>
+    <div class="footer">
+      &copy; 2025 GymStore. Mọi quyền được bảo lưu.
+    </div>
+  </div>
+</body>
+</html>
