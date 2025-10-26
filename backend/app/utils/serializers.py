@@ -71,30 +71,37 @@ def serialize_brand(b):
         "name": b.name
     }
 
-def serialize_cart_item(ci):
-    """ Serialize đối tượng CartItem. """
+def serialize_cart_item(item):
+    product = item.product
     return {
-        "id": ci.id,
-        "quantity": ci.quantity,
-        "product": serialize_product_list(ci.product) if ci.product else None
+        "id": item.id,
+        "quantity": item.quantity,
+        "product": {
+            "id": product.id,
+            "name": product.name,
+            "price": float(product.price),
+            "image_url": product.image_url,
+            "brand": product.brand.name if product.brand else None,
+            "category": product.category.name if product.category else None,
+        } if product else None
     }
 
-def serialize_cart(c):
-    """ Serialize đối tượng Cart. """
-    if not c:
-        return None
-    
-    cart_items = [serialize_cart_item(item) for item in c.items]
-    total_amount = sum(item['product']['price'] * item['quantity'] for item in cart_items if item['product'])
-    
-    return {
-        "id": c.id,
-        "user_id": c.user_id,
-        "items": cart_items,
-        "total_amount": total_amount,
-        "updated_at": c.updated_at.isoformat()
-    }
 
+def serialize_cart(cart):
+    if not cart:
+        return {"items": [], "total_price": 0}
+    
+    items = [serialize_cart_item(i) for i in cart.items]
+    total_price = sum(
+        (i.product.price or 0) * i.quantity for i in cart.items if i.product
+    )
+
+    return {
+        "id": cart.id,
+        "user_id": cart.user_id,
+        "items": items,
+        "total_price": float(total_price),
+    }
 def serialize_order_item(oi):
     """ Serialize đối tượng OrderItem. """
     return {

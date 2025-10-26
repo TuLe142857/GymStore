@@ -114,12 +114,13 @@ def change_password():
             PROFILE
 """
 
+
 @auth_bp.route('/profile', methods=['GET'])
 @jwt_required()
 def get_profile():
-    identity = get_jwt_identity()
+    identity = get_jwt_identity()  #  Lấy id người dùng từ token
     profile = AuthService.get_profile(identity)
-    return jsonify({'message': 'ok', 'data':{'profile': profile}}), 200
+    return jsonify({'message': 'ok', 'data': {'profile': profile}}), 200
 
 
 @auth_bp.route('/profile', methods=['POST'])

@@ -187,13 +187,29 @@ class AuthService:
     @staticmethod
     def get_profile(identity):
         user = User.query.filter_by(id=int(identity)).first()
+        if not user:
+            raise BaseAppError("User not found", 404)
+
+        info = user.user_info
+        if not info:
+            return {
+                "email": user.email,
+                "full_name": None,
+                "gender": None,
+                "phone": None,
+                "date_of_birth": None,
+                "address": None,
+            }
+
         return {
-            'email': user.email,
-            'name': user.user_info.full_name,
-            'gender': user.user_info.gender.name,
-            'phone': user.user_info.phone_number,
-            'date-of-birth': user.user_info.date_of_birth,
-            'address': user.user_info.address
+            "email": user.email,
+            "full_name": info.full_name,
+            "gender": getattr(info.gender, "name", None) if info.gender else None,
+            "phone": info.phone_number,
+            "date_of_birth": (
+                info.date_of_birth.isoformat() if info.date_of_birth else None
+            ),
+            "address": info.address,
         }
 
 

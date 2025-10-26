@@ -11,7 +11,7 @@ def create_app(config_class):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    CORS(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     db.init_app(app)
     mail.init_app(app)
@@ -24,6 +24,8 @@ def create_app(config_class):
     app.register_blueprint(admin_bp)
 
     register_commands(app)
+    
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # create db if not exist
     with app.app_context():

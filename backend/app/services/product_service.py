@@ -22,6 +22,10 @@ def get_all_products_service(args):
     if brand_id:
         query = query.filter(Product.brand_id == brand_id)
         
+    search = args.get('search')
+    if search:
+        query = query.filter(Product.name.ilike(f"%{search}%"))
+        
     # Tối ưu query: chỉ load category và brand
     query = query.options(
         joinedload(Product.category),
