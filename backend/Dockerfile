@@ -6,7 +6,9 @@ WORKDIR /app
 
 # Cài đặt các thư viện hệ thống (nếu cần, ví dụ: để build mysqlclient)
 # RUN apt-get update && apt-get install -y default-libmysqlclient-dev build-essential
-
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential gcc g++ \
+    && rm -rf /var/lib/apt/lists/*
 # Copy file requirements
 COPY requirements.txt .
 

@@ -38,6 +38,7 @@ services:
     volumes:
       - ./backend:/app     # Mount code Flask của bạn để hot-reload
       - ./backend/uploads:/app/uploads # Mount to host
+      - model_data:/app/app/recommendations
 #      - uploads_data:/app/uploads # use this to mount to docker volume (need uncomment docker volume below)
 
 
@@ -106,6 +107,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - model_data:/app/app/recommendations # Lưu mô hình đã train
 
 
 # Định nghĩa các ổ đĩa ảo (volumes) để lưu trữ dữ liệu
@@ -113,4 +117,5 @@ volumes:
   mysql_data:
   redis_data:
   redisinsight_data:
+  model_data:
 #  uploads_data: # use when mount upload folder to docker volume

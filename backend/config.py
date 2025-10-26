@@ -28,3 +28,16 @@ class Config:
 
     # redis
     REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+    # Các cài đặt khác cho môi trường dev nếu cần
+    
+class ProductionConfig(Config):
+    DEBUG = False
+    # Các cài đặt khác cho môi trường production nếu cần
+    
+config_by_name = {
+    'dev': DevelopmentConfig,
+    'prod': ProductionConfig
+}
