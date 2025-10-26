@@ -34,7 +34,7 @@ class Product(db.Model):
     serving_quantity = Column(Float, nullable=False)
     serving_unit = Column(String(20), nullable=False)
 
-    price = Column(Integer, nullable=False)
+    price = Column(Float, nullable=False)
     stock_quantity = Column(Integer, nullable=False, default=0, server_default=text("0"))
     is_active = Column(Boolean, nullable=False, default=True, server_default=text("TRUE"))
 

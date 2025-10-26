@@ -3,7 +3,7 @@ from .auth_routes import auth_bp
 from .brand_routes import brand_bp
 from .cart_routes import cart_bp
 from .category_routes import category_bp
-from .order_route import order_bp
+from .order_routes import order_bp
 from .product_routes import product_bp
 from .upload_routes import upload_bp
 

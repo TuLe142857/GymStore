@@ -1,6 +1,7 @@
+import datetime
 from ..extensions import db
 from sqlalchemy import (
-    Column, Integer, String, Text, Enum, DateTime, text,
+    Column, Float, Integer, String, Text, Enum, DateTime, text,
     ForeignKey, UniqueConstraint, Index
 )
 from sqlalchemy.orm import relationship
@@ -61,6 +62,7 @@ class Order(db.Model):
     total_amount = Column(Integer, nullable=False)
     status = Column(Enum(OrderStatus), nullable=False, default=OrderStatus.PROCESSING)
     created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), server_default=func.now(), onupdate=func.now(), server_onupdate=func.now())
 
     # Relationship
     user = relationship('User', back_populates='orders')
@@ -74,7 +76,7 @@ class OrderItem(db.Model):
     order_id = Column(Integer, ForeignKey('order.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
     product_id = Column(Integer, ForeignKey('product.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False)
     quantity = Column(Integer, nullable=False)
-    price_at_purchase = Column(Integer, nullable=False)
+    price_at_purchase = Column(Float, nullable=False)
 
     # Relationship
     order = relationship('Order', back_populates='items')
