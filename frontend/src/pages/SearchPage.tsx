@@ -11,7 +11,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     axiosClient
-      .get(`/product/?q=${encodeURIComponent(q)}`)
+      .get(`/product/?search=${encodeURIComponent(q)}`)
       .then((res) => setProducts(res.data.products))
       .finally(() => setLoading(false));
   }, [q]);
