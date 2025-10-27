@@ -1,6 +1,7 @@
 .env
 .idea/
 .vscode/
+backend/uploads
 uploads/instance/search/
 instance/recommendations/
 instance/hf_cache/

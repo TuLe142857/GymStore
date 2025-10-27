@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { useCart } from "@/context/cart-context"; // Import
+import { useCart } from "@/context/cart-context"; 
+import { logInteraction } from "@/utils/interactions";
 import React, { useState } from "react"; // Import React và useState
 
 interface ProductCardProps {
@@ -32,9 +33,11 @@ export function ProductCard({
 
     setIsAdding(true);
     try {
-      await addToCart(id, 1); // Gọi hàm context
+      await addToCart(id, 1); 
+      // Gọi hàm context
+      logInteraction(id, 'add_to_cart');
     } catch (error) {
-      console.error("Failed to add to cart", error);
+      console.error("Failed to add to cart or log interaction", error);
     } finally {
       setIsAdding(false);
     }
@@ -51,7 +54,7 @@ export function ProductCard({
           />
         </CardContent>
       </Link>
-
+ 
       <CardFooter className="flex flex-col items-start gap-3 p-4">
         <div className="w-full">
           <p className="text-xs text-muted-foreground mb-1">{category}</p>
@@ -71,7 +74,7 @@ export function ProductCard({
 
         <div className="w-full flex items-center justify-between">
           <span className="font-bold text-lg text-primary">
-            ${price.toFixed(2)}
+            ${Number(price).toFixed(2)}
           </span>
           <Button
             size="sm"

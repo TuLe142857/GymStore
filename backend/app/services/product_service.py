@@ -101,7 +101,7 @@ def get_all_products_service(args):
 
     # --- Serialize (danh sách gọn nhẹ, không feedback/ingredients) ---
     serialized_products = [serialize_product_list(p) for p in pagination.items]
-    serialized_pagination = serialize_pagination(pagination, "product.get_all_products")
+    serialized_pagination = serialize_pagination(pagination, "api.product.get_products")
 
     return {
         "products": serialized_products,

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.interaction_service import log_interaction
 
-interaction_bp = Blueprint("interaction", __name__)
+interaction_bp = Blueprint("interaction", __name__, url_prefix="/interaction")
 
 @interaction_bp.route("/log", methods=["POST"])
 @jwt_required()
@@ -22,7 +22,7 @@ def log_user_interaction():
     result, status = log_interaction(
         user_id=int(current_user_id), 
         product_id=int(product_id), 
-        interaction_type=interaction_type
+        interaction_type_str=interaction_type
     )
     
     return jsonify(result), status

@@ -92,10 +92,10 @@ class AuthService:
 
         redis_client.delete(key)
 
-        role_customer = Role.query.filter_by(name='CUSTOMER').first()
+        role_customer = Role.query.filter_by(name='USER').first()
 
         if not role_customer:
-            raise Exception("CUSTOMER role does not exist")
+            raise Exception("USER role does not exist")
 
         new_user = User(
             email=email,
@@ -107,6 +107,10 @@ class AuthService:
         new_user_info = UserInfor(
             user=new_user,
             full_name=full_name,
+        )
+        
+        new_cart = Cart(
+            user=new_user
         )
 
         new_user.user_info = new_user_info

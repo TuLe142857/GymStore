@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star } from "lucide-react";
 import { useCart } from "@/context/cart-context"; 
 import { ProductRecommendationList } from "@/components/ProductRecommendationList";
-
+import { logInteraction } from "@/utils/interactions";
 // Định nghĩa kiểu dữ liệu cho sản phẩm
 interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image_url: string;
   category: string;
   description: string;
   rating: number;
@@ -33,6 +33,8 @@ export default function ProductPage() {
         // Giả sử API chi tiết sản phẩm là /product/:id
         const res = await axiosClient.get(`/product/${id}`);
         setProduct(res.data);
+        if (id) await logInteraction(id, 'view');
+        
       } catch (err) {
         console.error(err);
         setError("Failed to load product details.");
@@ -50,6 +52,7 @@ export default function ProductPage() {
     if (!product) return;
     setIsAdding(true);
     await addToCart(product.id, 1);
+    logInteraction(product.id, 'add_to_cart');
     setIsAdding(false);
   };
 
@@ -81,9 +84,9 @@ export default function ProductPage() {
     <div className="container mx-auto py-12 px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image */}
-        <div className="bg-muted rounded-lg overflow-hidden">
+        <div className="bg-muted rounded-lg overflow-hidden h-96 w-96 mx-auto">
           <img
-            src={product.image || "/placeholder.svg"}
+            src={product.image_url || "/placeholder.svg"}
             alt={product.name}
             className="w-full h-full object-cover"
           />
