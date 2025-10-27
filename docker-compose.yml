@@ -1,83 +1,74 @@
 services:
-  # 1. Dịch vụ Frontend (React Dev Server)
   frontend:
     container_name: frontend_service
     build:
       context: ./frontend
     restart: unless-stopped
     volumes:
-      - ./frontend:/app       # Mount code React của bạn vào container
-      - /app/node_modules     # Tránh mount đè thư mục node_modules
+      - ./frontend:/app
+      - /app/node_modules
     ports:
-      - "3000:3000"           # Mở port 3000 (React Dev Server)
-    # Lệnh npm start đã là CMD trong Dockerfile-fe nên không cần command ở đây
+      - "3000:3000"
     environment:
-      - CHOKIDAR_USEPOLLING=true # Giúp hot-reload hoạt động ổn định
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
 
-  # 2. Dịch vụ Backend (Flask Dev Server)
   backend:
     container_name: backend_service
     build:
       context: ./backend
     restart: unless-stopped
     ports:
-      - "5000:5000"          # Mở port 5000 (Flask Dev Server)
+      - "5000:5000"
     env_file:
-      - ./.env       # Đọc file .env từ thư mục backend
+      - ./.env
     environment:
-      # Kết nối tới service bằng TÊN
       DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
       REDIS_URL: redis://${REDIS_HOST}:6379/0
+      TRANSFORMERS_CACHE: /app/instance/hf_cache
     depends_on:
       db:
-          condition: service_healthy
+        condition: service_healthy
       redis:
         condition: service_healthy
     volumes:
-      - ./backend:/app     # Mount code Flask của bạn để hot-reload
-      - ./backend/uploads:/app/uploads # Mount to host
-      - model_data:/app/app/recommendations
-#      - uploads_data:/app/uploads # use this to mount to docker volume (need uncomment docker volume below)
+      - ./backend:/app
+      - ./backend/uploads:/app/uploads
+      - ./backend/instance:/app/instance
 
-
-  # 3. Dịch vụ Database (MySQL)
   db:
     image: mysql:8.0
     container_name: db_service
     restart: unless-stopped
     env_file:
-      - ./.env       # Dùng chung file .env
+      - ./.env
     ports:
-      - "3306:3306"          # Mở port để debug bằng tool (MySQL Workbench)
+      - "3306:3306"
     volumes:
       - ./backend/db:/docker-entrypoint-initdb.d
-      - mysql_data:/var/lib/mysql 
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
-  # 4. Dịch vụ Cache (Redis)
   redis:
     image: redis:6-alpine
     container_name: redis_service
     restart: unless-stopped
     ports:
-      - "6379:6379"          # Mở port để debug bằng tool (RedisInsight)
+      - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # redis GUI
-  #  http://localhost:5540
   redisinsight:
     image: redis/redisinsight:latest
     container_name: redisinsight_gui
@@ -90,32 +81,48 @@ services:
       - redisinsight_data:/data
     restart: unless-stopped
 
+  # FAISS auto rebuild job
+  search_indexing_job:
+    build:
+      context: ./backend
+    container_name: search_indexing_job
+    command: ["python", "-m", "jobs.auto_rebuild_search"]
+    env_file:
+      - ./.env
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./backend/instance:/app/instance
+    restart: "no"
 
-  # 5. Dịch vụ chạy Job (Train mô hình)
+  # Recommender training job
   recommender_job:
     build:
       context: ./backend
-    container_name: job_service
-    command: ["python", "jobs/run_training.py"] # Ghi đè CMD để chạy script
+    container_name: recommender_job
+    command: ["python", "-m", "jobs.run_training"]
     env_file:
       - ./.env
     environment:
       DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
       REDIS_URL: redis://${REDIS_HOST}:6379/0
     depends_on:
+      search_indexing_job:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     volumes:
       - ./backend:/app
-      - model_data:/app/app/recommendations # Lưu mô hình đã train
+      - ./backend/instance:/app/instance
+    restart: "no"
 
-
-# Định nghĩa các ổ đĩa ảo (volumes) để lưu trữ dữ liệu
 volumes:
   mysql_data:
   redis_data:
   redisinsight_data:
-  model_data:
-#  uploads_data: # use when mount upload folder to docker volume

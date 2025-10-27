@@ -24,10 +24,8 @@ def get_products():
     paginated_result = get_all_products_service(args)
     
     return jsonify({
-        'products': [serialize_product_list(p) for p in paginated_result.items],
-        'total_pages': paginated_result.pages,
-        'current_page': paginated_result.page,
-        'total_products': paginated_result.total
+    "products": paginated_result["products"],
+    "pagination": paginated_result["pagination"]
     }), 200
 
 @product_bp.route('/<int:product_id>', methods=['GET'])

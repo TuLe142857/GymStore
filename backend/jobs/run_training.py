@@ -10,6 +10,7 @@ from app import create_app, db
 from app.services.recommendation_service import build_similarity_matrix
 from app.services.recommendation_service import build_collaborative_model
 
+
 def run_job():
     print("Starting recommendation model training job...")
     
