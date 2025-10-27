@@ -1,45 +1,14 @@
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ProductCard } from "@/components/Product-Card";
-import axios from "axios";
-import axiosClient from "@/utils/axiosClient";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  rating: number;
-}
+import { ProductRecommendationList } from "@/components/ProductRecommendationList";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  // 🔹 Gọi API top-products từ backend
-  useEffect(() => {
-    const fetchFeaturedProducts = async () => {
-      try {
-        setLoading(true);
-        const res = await axiosClient.get("/recommend/top-products");
-        setFeaturedProducts(res.data);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load products");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeaturedProducts();
-  }, []);
 
   // 🔍 Xử lý tìm kiếm
   const handleSearch = (e: React.FormEvent) => {
@@ -91,28 +60,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Featured Products */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-2">Featured Products</h2>
-            <p className="text-muted-foreground mb-8">
-              Discover our best-selling supplements
-            </p>
+        {/* Recommended For You (JWT) */}
+        <section className="py-8">
+          <ProductRecommendationList
+            title="Recommended For You"
+            endpoint="/recommend/for-you"
+          />
+        </section>
 
-            {loading ? (
-              <p className="text-center text-muted-foreground">Loading...</p>
-            ) : error ? (
-              <p className="text-center text-destructive">{error}</p>
-            ) : featuredProducts.length === 0 ? (
-              <p className="text-center text-muted-foreground">No products found.</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredProducts.map((product) => (
-                  <ProductCard key={product.id} {...product} />
-                ))}
-              </div>
-            )}
-          </div>
+        {/* Top Products (public) */}
+        <section className="py-8">
+          <ProductRecommendationList
+            title="Top Products"
+            endpoint="/recommend/top-products"
+          />
         </section>
 
         {/* CTA Section */}

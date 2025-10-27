@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import axiosClient from "@/utils/axiosClient";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star } from "lucide-react";
-import { useCart } from "@/context/cart-context"; // Import
+import { useCart } from "@/context/cart-context"; 
+import { ProductRecommendationList } from "@/components/ProductRecommendationList";
 
 // Định nghĩa kiểu dữ liệu cho sản phẩm
 interface Product {
@@ -115,6 +116,10 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
+      <ProductRecommendationList
+      title="Similar Products"
+      endpoint={`/recommend/similar-products/${id}`}
+      />
     </div>
   );
 }
