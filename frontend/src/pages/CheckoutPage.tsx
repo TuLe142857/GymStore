@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axiosClient from "@/utils/axiosClient";
-import { logInteraction } from "@/utils/interactions"; // <-- 1. IMPORT HÀM MỚI
+import { logInteraction } from "@/utils/interactions";
 
 export default function CheckoutPage() {
   const [address, setAddress] = useState("");
@@ -13,40 +13,40 @@ export default function CheckoutPage() {
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    // Khai báo kiểu dữ liệu tạm thời cho cart item
-    type CartItem = {
-      id: number;
-      product: { id: string; name: string; };
-      quantity: number;
-    };
 
     try {
-      // --- 2. LẤY GIỎ HÀNG TRƯỚC KHI THANH TOÁN ---
-      // Dùng logic tương tự CartPage.tsx để lấy danh sách item
+      // BƯỚC 1: LẤY GIỎ HÀNG TRƯỚC
       const cartRes = await axiosClient.get("/cart/");
-      const cartItems: CartItem[] = cartRes.data?.items || [];
-      // ---------------------------------------------
+      const cartItems = cartRes.data?.items || [];
 
-      // 3. Tạo đơn hàng (như cũ)
-      await axiosClient.post("/order/create", { shipping_address: address });
+      if (cartItems.length === 0) {
+        alert("Your cart is empty!");
+        setLoading(false);
+        return;
+      }
 
-      // --- 4. LOG 'PURCHASE' CHO TỪNG SẢN PHẨM ---
-      // Chạy sau khi tạo đơn hàng thành công
-      if (cartItems.length > 0) {
-        console.log("Logging 'purchase' interaction for items:", cartItems);
-        for (const item of cartItems) {
-          if (item.product?.id) {
-            logInteraction(String(item.product.id), 'purchase');
-          }
+      // BƯỚC 2: TẠO ĐƠN HÀNG
+      const res = await axiosClient.post("/order/create", {
+        shipping_address: address,
+      });
+
+      console.log("Order response:", res.data);
+
+      // BƯỚC 3: GHI LOG (dùng cartItems đã lấy từ Bước 1)
+      for (const item of cartItems) {
+        // Đảm bảo item.product.id tồn tại
+        if (item.product && item.product.id) {
+          logInteraction(String(item.product.id), "purchase");
         }
       }
-      // ------------------------------------------
 
-      // 5. Điều hướng (như cũ)
+      alert("Order placed successfully!");
+      // Cập nhật lại context giỏ hàng (nếu có)
+      // fetchCart(); // Ví dụ gọi lại hàm fetchCart từ context
       navigate("/orders");
-    } catch {
-      alert("Checkout failed");
+    } catch (err: any) {
+      console.error("Checkout error:", err);
+      alert(err.response?.data?.error || "Checkout failed!");
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export default function CheckoutPage() {
         <Input
           placeholder="Enter shipping address"
           value={address}
-          onChange={(e) => setAddress(e.value)}
+          onChange={(e) => setAddress(e.target.value)} // ✅ sửa e.value -> e.target.value
           required
         />
         <Button type="submit" disabled={loading}>

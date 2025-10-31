@@ -25,4 +25,4 @@ def log_user_interaction():
         interaction_type_str=interaction_type
     )
     
-    return jsonify(result), status
+    return jsonify(result), status 

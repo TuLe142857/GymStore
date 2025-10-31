@@ -47,4 +47,4 @@ def log_interaction(user_id, product_id, interaction_type_str): # Nhận vào st
         db.session.rollback()
         # Log lỗi ra console để debug
         print(f"Error logging interaction: {str(e)}")
-        return {"error": "An internal error occurred while logging interaction."}, 500
+        return {"error": "An internal error occurred while logging interaction."}, 500 
