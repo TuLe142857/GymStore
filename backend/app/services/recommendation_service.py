@@ -84,6 +84,8 @@ def _get_product_corpus():
         # và join tiếp từ ProductIngredient tới Ingredient qua relationship 'ingredient'
         db.joinedload(Product.ingredient_associations).joinedload(ProductIngredient.ingredient)
     ).filter(Product.is_active == True).all() # Chỉ lấy sản phẩm active
+    
+    print(f"[DEBUG] Found {len(products)} active products in _get_product_corpus.")
 
     data = []
     for p in products:
