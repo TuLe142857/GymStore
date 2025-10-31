@@ -1,10 +1,10 @@
-// frontend/src/pages/ProductsPage.tsx (Cập nhật)
+
 import { useEffect, useState } from "react";
 import axiosClient from "@/utils/axiosClient";
 import { ProductCard } from "@/components/Product-Card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button"; // <-- Import Button
-import type { Product } from "@/types"; // <-- Import Product type
+import { Button } from "@/components/ui/button"; 
+import type { Product } from "@/types"; 
 
 // Định nghĩa kiểu cho pagination
 interface Pagination {
@@ -76,7 +76,6 @@ export default function ProductsPage() {
   };
 
   // Lọc sản phẩm ở client-side (ĐÃ BỊ XÓA)
-  // const filtered = ... (XÓA BỎ DÒNG NÀY)
   // Backend đã xử lý việc lọc, ta chỉ cần hiển thị `products`
 
   return (

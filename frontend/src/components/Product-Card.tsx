@@ -6,6 +6,8 @@ import { useCart } from "@/context/cart-context";
 import { logInteraction } from "@/utils/interactions";
 import React, { useState } from "react"; // Import React và useState
 
+const STATIC_BASE_URL = "http://localhost:5000";
+
 interface ProductCardProps {
   id: string;
   name: string;
@@ -23,8 +25,18 @@ export function ProductCard({
   category,
   rating,
 }: ProductCardProps) {
-  const { addToCart } = useCart(); // Lấy hàm từ context
+  const { addToCart } = useCart(); 
   const [isAdding, setIsAdding] = useState(false);
+
+  const getCorrectImageUrl = (imagePath?: string) => {
+    if (!imagePath) return "/placeholder.svg";
+    if (imagePath.startsWith("http")) return imagePath;
+    // path tương đối: đảm bảo luôn có '/'
+    if (imagePath.startsWith("/")) return `${STATIC_BASE_URL}${imagePath}`;
+    return `${STATIC_BASE_URL}/${imagePath}`;
+  };
+
+  const imageUrl = getCorrectImageUrl(image);
 
   // Xử lý thêm vào giỏ hàng
   const handleAddToCart = async (e: React.MouseEvent) => {
@@ -48,7 +60,7 @@ export function ProductCard({
       <Link to={`/product/${id}`}>
         <CardContent className="p-0 overflow-hidden bg-muted h-48">
           <img
-            src={image || "/placeholder.svg"}
+            src={imageUrl}
             alt={name}
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           />

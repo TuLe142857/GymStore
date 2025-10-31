@@ -12,7 +12,14 @@ export default function SearchPage() {
   useEffect(() => {
     axiosClient
       .get(`/product/?search=${encodeURIComponent(q)}`)
-      .then((res) => setProducts(res.data.products))
+      .then((res) =>
+        setProducts(
+          res.data.products.map((p: any) => ({
+            ...p,
+            image: p.image_url, 
+          }))
+        )
+      )
       .finally(() => setLoading(false));
   }, [q]);
 
