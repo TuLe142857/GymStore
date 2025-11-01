@@ -18,12 +18,14 @@ const axiosClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: false,
 });
 
 // Nếu có JWT token, tự động gắn vào header
 axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
   if (token) {
+    config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

@@ -246,3 +246,4 @@ class AuthService:
             user.user_info.address = data['address']
 
         db.session.commit()
+    

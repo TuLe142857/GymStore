@@ -14,10 +14,19 @@ import CheckoutPage from "@/pages/CheckoutPage";
 import OrdersPage from "@/pages/OrderPage";
 import ProfilePage from "@/pages/ProfilePage";
 import OrderDetailPage from "@/pages/OrderDetailPage"; 
+import AdminOrdersPage from "@/pages/AdminOrdersPage";
+import AdminLayout from "@/layouts/AdminLayout";
 // ✅ Component bảo vệ route yêu cầu đăng nhập (đã cập nhật)
 const ProtectedRoute: React.FC = () => {
   const { isLoggedIn } = useAuth(); // Sử dụng trạng thái từ context
   if (!isLoggedIn) return <Navigate to="/login" replace />;
+  return <Outlet />;
+};
+
+const AdminProtectedRoute: React.FC = () => {
+  const { isLoggedIn, role } = useAuth();
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
+  if (role !== "ADMIN") return <Navigate to="/" replace />;
   return <Outlet />;
 };
 
@@ -38,6 +47,12 @@ const AppRoutes: React.FC = () => {
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/orders/:id" element={<OrderDetailPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+        </Route>
+      </Route>
+
+      <Route element={<AdminProtectedRoute />}>
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/orders" element={<AdminOrdersPage />} />
         </Route>
       </Route>
 

@@ -6,6 +6,9 @@ import { ShoppingCart, Star } from "lucide-react";
 import { useCart } from "@/context/cart-context"; 
 import { ProductRecommendationList } from "@/components/ProductRecommendationList";
 import { logInteraction } from "@/utils/interactions";
+import { FeedbackList } from "@/components/FeedbackList";
+import { FeedbackForm } from "@/components/FeedbackForm";
+import { useAuth } from "@/context/auth-context";
 // Định nghĩa kiểu dữ liệu cho sản phẩm
 interface Product {
   id: string;
@@ -24,6 +27,8 @@ export default function ProductPage() {
   const [error, setError] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const [feedbackKey, setFeedbackKey] = useState(Date.now());
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -48,6 +53,10 @@ export default function ProductPage() {
     }
   }, [id]);
 
+  const handleFeedbackSubmitted = () => {
+    setFeedbackKey(Date.now());
+  };
+  
   const handleAddToCart = async () => {
     if (!product) return;
     setIsAdding(true);
@@ -79,6 +88,8 @@ export default function ProductPage() {
       </div>
     );
   }
+
+
 
   return (
     <div className="container mx-auto py-12 px-4">
@@ -123,6 +134,23 @@ export default function ProductPage() {
       title="Similar Products"
       endpoint={`/recommend/similar-products/${id}`}
       />
+      <div className="mt-12 border-t pt-8">
+        <h2 className="text-2xl font-bold mb-6">Customer Feedback</h2>
+
+        {/* Danh sách feedback */}
+        <FeedbackList key={feedbackKey} productId={id!} />
+
+        {/* Form gửi feedback (chỉ hiển thị khi user đã đăng nhập) */}
+        {isAuthenticated && (
+          <div className="mt-8">
+            <FeedbackForm
+              productId={id!}
+              onFeedbackSubmit={handleFeedbackSubmitted}
+            />
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }

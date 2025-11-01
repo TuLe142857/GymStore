@@ -6,9 +6,10 @@ from .category_routes import category_bp
 from .order_routes import order_bp
 from .product_routes import product_bp
 from .upload_routes import upload_bp
-
 from .recommendation_routes import recommendation_bp
 from .interaction_routes import interaction_bp
+from .feedback_routes import feedback_bp
+from .admin_routes import admin_bp
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -21,4 +22,6 @@ api_bp.register_blueprint(order_bp)
 api_bp.register_blueprint(product_bp)
 api_bp.register_blueprint(upload_bp)
 api_bp.register_blueprint(recommendation_bp)
-api_bp.register_blueprint(interaction_bp)  
+api_bp.register_blueprint(interaction_bp) 
+api_bp.register_blueprint(feedback_bp) 
+api_bp.register_blueprint(admin_bp)

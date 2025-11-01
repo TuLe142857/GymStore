@@ -131,3 +131,4 @@ def update_profile():
 
     AuthService.update_profile(identity, data)
     return jsonify({'message': 'ok', 'data':[]}), 200
+

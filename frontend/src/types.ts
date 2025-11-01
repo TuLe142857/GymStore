@@ -25,3 +25,18 @@ export interface ProductsApiResponse {
   current_page: number;
   total_products: number;
 }
+
+export type OrderStatus = "PROCESSING" | "DELIVERED" | "CANCELLED";
+
+export interface Order {
+  id: number;
+  user: {
+    id: number;
+    name?: string | null;
+    email: string;
+  } | null;
+  address: string;
+  total_amount: number;
+  status: OrderStatus;
+  created_at: string;
+}

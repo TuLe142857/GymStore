@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from .api import api_bp
-from .admin_routes import admin_bp
+from .api import admin_bp
 from .extensions import db, jwt, mail, redis_client
 from .errors import init_error_handler
 from .commands import register_commands
@@ -10,8 +10,6 @@ from .commands import register_commands
 def create_app(config_class):
     app = Flask(__name__)
     app.config.from_object(config_class)
-
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     db.init_app(app)
     mail.init_app(app)
@@ -26,7 +24,6 @@ def create_app(config_class):
     register_commands(app)
     
     CORS(app, resources={r"/api/*": {"origins": "*"}})
-
     # create db if not exist
     with app.app_context():
         db.create_all()

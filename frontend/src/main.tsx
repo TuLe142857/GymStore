@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { AuthProvider } from "./context/auth-context.tsx";
 import { CartProvider } from "./context/cart-context.tsx";
+import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         {/* Bọc CartProvider để quản lý giỏ hàng */}
         <CartProvider>
           <App />
+          <Toaster richColors position="top-right" />
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

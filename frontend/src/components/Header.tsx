@@ -1,17 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, Package, LogOut } from "lucide-react";
+import { ShoppingCart, User, Package, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/auth-context"; // Import
-import { useCart } from "@/context/cart-context"; // Import
+import { useAuth } from "@/context/auth-context";
+import { useCart } from "@/context/cart-context";
 
-export function Header() {
-  const { isLoggedIn, logout } = useAuth(); // Lấy trạng thái và hàm logout
-  const { itemCount } = useCart(); // Lấy số lượng giỏ hàng
+export default function Header() {
+  const { isLoggedIn, role, logout } = useAuth(); // ✅ lấy role từ context
+  const { itemCount } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate("/login"); // Điều hướng về trang login sau khi logout
+    navigate("/login");
   };
 
   return (
@@ -48,6 +48,18 @@ export function Header() {
           >
             About
           </Link>
+
+          {/* ✅ Admin Panel - chỉ hiện khi role là ADMIN */}
+          {isLoggedIn && role === "ADMIN" && (
+            <Link
+              to="/admin/orders"
+              className="flex items-center gap-1 text-red-500 font-semibold hover:text-red-700 transition"
+              title="Go to Admin Dashboard"
+            >
+              <Settings className="w-4 h-4" />
+              Admin Panel
+            </Link>
+          )}
         </nav>
 
         {/* Right Actions */}
@@ -80,6 +92,8 @@ export function Header() {
               </Button>
             </Link>
           )}
+
+          {/* Giỏ hàng */}
           <Link to="/cart">
             <Button
               variant="ghost"
@@ -87,7 +101,6 @@ export function Header() {
               title="Shopping Cart"
               className="relative"
             >
-              {/* Badge hiển thị số lượng */}
               {isLoggedIn && itemCount > 0 && (
                 <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
                   {itemCount}
@@ -101,5 +114,3 @@ export function Header() {
     </header>
   );
 }
-
-export default Header;
