@@ -121,6 +121,25 @@ services:
       - ./backend:/app
       - ./backend/instance:/app/instance
     restart: "no"
+    
+  sentiment_job:
+    build:
+      context: ./backend
+    container_name: sentiment_job
+    # 💡 Trỏ đến script mới
+    command: ["python", "-m", "jobs.run_sentiment_training"] 
+    env_file:
+      - ./.env
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
+      # (Bạn có thể thêm REDIS_URL nếu script cần)
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./backend/instance:/app/instance
+    restart: "no"
 
 volumes:
   mysql_data:

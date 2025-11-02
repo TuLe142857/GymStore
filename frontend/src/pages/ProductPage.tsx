@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star } from "lucide-react";
 import { useCart } from "@/context/cart-context"; 
 import { ProductRecommendationList } from "@/components/ProductRecommendationList";
+import { SentimentSummary } from "@/components/SentimentSummary";
 import { logInteraction } from "@/utils/interactions";
 import { FeedbackList } from "@/components/FeedbackList";
 import { FeedbackForm } from "@/components/FeedbackForm";
 import { useAuth } from "@/context/auth-context";
+
 // Định nghĩa kiểu dữ liệu cho sản phẩm
 interface Product {
   id: string;
@@ -114,8 +116,9 @@ export default function ProductPage() {
           <div className="flex items-center gap-2 mb-4">
             <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
             <span className="font-medium">{product.rating.toFixed(1)}</span>
-            <span className="text-muted-foreground">(120 reviews)</span>
-          </div>
+            <span className="text-muted-foreground">({product.feedbacks?.length || 0} reviews)</span>
+          </div>  
+          <SentimentSummary productId={product.id} />
           <p className="text-lg text-muted-foreground mb-6">
             {product.description || "No description available."}
           </p>

@@ -6,6 +6,7 @@ from .api import admin_bp
 from .extensions import db, jwt, mail, redis_client
 from .errors import init_error_handler
 from .commands import register_commands
+from .api.setiment_routes import sentiment_bp
 
 def create_app(config_class):
     app = Flask(__name__)
@@ -20,6 +21,7 @@ def create_app(config_class):
 
     app.register_blueprint(api_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(sentiment_bp)
 
     register_commands(app)
     
