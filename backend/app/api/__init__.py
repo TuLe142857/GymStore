@@ -9,8 +9,9 @@ from .upload_routes import upload_bp
 from .recommendation_routes import recommendation_bp
 from .interaction_routes import interaction_bp
 from .feedback_routes import feedback_bp
-from .admin_routes import admin_bp
-
+from .ingredient_routes import ingredient_bp
+# from .admin_routes import admin_bp
+from .admin_api import admin_bp
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
 
@@ -25,3 +26,4 @@ api_bp.register_blueprint(recommendation_bp)
 api_bp.register_blueprint(interaction_bp) 
 api_bp.register_blueprint(feedback_bp) 
 api_bp.register_blueprint(admin_bp)
+api_bp.register_blueprint(ingredient_bp)

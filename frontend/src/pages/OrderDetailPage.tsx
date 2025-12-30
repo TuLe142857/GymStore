@@ -124,7 +124,7 @@ export default function OrderDetailPage() {
                     Quantity: {item.quantity}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Price: ${item.price_at_purchase.toFixed(2)}
+                    Price: {Intl.NumberFormat("vi-VN").format(Number(item.price_at_purchase))} VND
                   </p>
                 </div>
               </div>
@@ -177,7 +177,7 @@ export default function OrderDetailPage() {
       {/* 💰 Tổng tiền & Địa chỉ giao hàng */}
       <div className="mt-6 border-t pt-6">
         <h3 className="text-lg font-semibold">
-          Total: ${order.total_amount.toFixed(2)}
+          Total: {Intl.NumberFormat("vi-VN").format(Number(order.total_amount))} VND
         </h3>
         <p className="text-muted-foreground mt-2">
           Shipping to: {order.address}

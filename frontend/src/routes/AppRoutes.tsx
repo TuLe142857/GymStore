@@ -14,7 +14,11 @@ import CheckoutPage from "@/pages/CheckoutPage";
 import OrdersPage from "@/pages/OrderPage";
 import ProfilePage from "@/pages/ProfilePage";
 import OrderDetailPage from "@/pages/OrderDetailPage"; 
-import AdminOrdersPage from "@/pages/AdminOrdersPage";
+import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
+import AdminProductsPage from "@/pages/admin/AdminProductsPage";
+import AdminCatalogsPage from "@/pages/admin/AdminCatalogsPage";
+import AdminStatisticsPage from "@/pages/admin/AdminStatisticsPage";
+import AdminTrainingPage from "@/pages/admin/AdminTrainingPage";
 import AdminLayout from "@/layouts/AdminLayout";
 // ✅ Component bảo vệ route yêu cầu đăng nhập (đã cập nhật)
 const ProtectedRoute: React.FC = () => {
@@ -52,7 +56,11 @@ const AppRoutes: React.FC = () => {
 
       <Route element={<AdminProtectedRoute />}>
         <Route element={<AdminLayout />}>
-          <Route path="/admin/orders" element={<AdminOrdersPage />} />
+            <Route path="/admin/orders" element={<AdminOrdersPage />} />
+            <Route path="/admin/products" element={<AdminProductsPage />} />
+            <Route path="/admin/catalogs" element={<AdminCatalogsPage />} />
+            <Route path="/admin/statistics" element={<AdminStatisticsPage />} />
+            <Route path="/admin/training" element={<AdminTrainingPage />} />
         </Route>
       </Route>
 

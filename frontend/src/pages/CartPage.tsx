@@ -54,7 +54,9 @@ export default function CartPage() {
               </div>
             </div>
             <div className="flex gap-4 items-center justify-between">
-              <p className="font-medium text-lg">${item.product?.price}</p>
+              <p className="font-medium text-lg">
+                {Intl.NumberFormat("vi-VN").format(Number(item.product?.price))} VND
+              </p>
               <Button
                 variant="outline"
                 size="sm"
@@ -67,7 +69,9 @@ export default function CartPage() {
         ))}
       </div>
       <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-2xl font-bold">Total: ${cart.total_price}</p>
+        <p className="text-2xl font-bold">
+          Total {Intl.NumberFormat("vi-VN").format(Number(cart.total_price))} VND
+        </p>
         <Button
           size="lg"
           onClick={() => navigate("/checkout")} // Sử dụng navigate

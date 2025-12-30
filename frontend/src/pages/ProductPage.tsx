@@ -12,14 +12,26 @@ import { FeedbackForm } from "@/components/FeedbackForm";
 import { useAuth } from "@/context/auth-context";
 
 // Định nghĩa kiểu dữ liệu cho sản phẩm
+interface Ingredients {
+  id: number,
+  measurement_unit: string,
+  name: string,
+  quantity: number
+}
 interface Product {
   id: string;
   name: string;
   price: number;
   image_url: string;
+  brand: string;
   category: string;
-  description: string;
+  desc: string;
   rating: number;
+  package_quantity: number,
+  package_unit: string,
+  serving_quantity: number,
+  serving_unit: string,
+  ingredients: Ingredients[]
 }
 
 export default function ProductPage() {
@@ -39,6 +51,7 @@ export default function ProductPage() {
         setError(null);
         // Giả sử API chi tiết sản phẩm là /product/:id
         const res = await axiosClient.get(`/product/${id}`);
+        console.log(JSON.stringify(res.data, null, 2));
         setProduct(res.data);
         if (id) await logInteraction(id, 'view');
         
@@ -107,32 +120,88 @@ export default function ProductPage() {
 
         {/* Product Details */}
         <div className="flex flex-col justify-center">
-          <span className="text-sm text-muted-foreground mb-2">
-            {product.category}
-          </span>
+
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
             {product.name}
           </h1>
+
+
+          {/*AVG RATING*/}
           <div className="flex items-center gap-2 mb-4">
             <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
             <span className="font-medium">{product.rating.toFixed(1)}</span>
             <span className="text-muted-foreground">({product.feedbacks?.length || 0} reviews)</span>
-          </div>  
+          </div>
+
+          {/*SENTIMENT*/}
           <SentimentSummary productId={product.id} />
-          <p className="text-lg text-muted-foreground mb-6">
-            {product.description || "No description available."}
-          </p>
+
+          {/*BRAND & CATEGORY & PACKAGE INFO*/}
+          <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+              <span className="font-semibold text-gray-700">Brand:</span>
+              <span className="ml-2 text-gray-600">{product.brand || "N/A"}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-700">Category:</span>
+              <span className="ml-2 text-gray-600">{product.category || "N/A"}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-700">Package size:</span>
+              <span className="ml-2 text-gray-600">{product.package_quantity} {product.package_unit}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-700">Serving size:</span>
+              <span className="ml-2 text-gray-600">{product.serving_quantity} {product.serving_unit}</span>
+            </div>
+          </div>
+
+          {/*PRICE && ADD TO CART*/}
           <div className="flex items-center justify-between">
             <span className="text-4xl font-bold text-primary">
-              ${product.price.toFixed(2)}
+              {Intl.NumberFormat("vi-VN").format(Number(product.price))} VND
             </span>
             <Button size="lg" onClick={handleAddToCart} disabled={isAdding}>
               <ShoppingCart className="w-5 h-5 mr-2" />
               {isAdding ? "Adding..." : "Add to Cart"}
             </Button>
           </div>
+
+          {/*INGREDIENT */}
+          {product.ingredients && product.ingredients.length > 0 && (
+              <div className="mb-6">
+                <h3 className="font-semibold text-lg mb-2">Supplement Facts</h3>
+                <div className="overflow-x-auto border rounded-lg">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-gray-100 uppercase text-xs font-bold text-gray-600">
+                    <tr>
+                      <th className="px-4 py-2">Ingredient</th>
+                      <th className="px-4 py-2 text-right">Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                    {product.ingredients.map((ing) => (
+                        <tr key={ing.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 font-medium text-gray-800">{ing.name}</td>
+                          <td className="px-4 py-2 text-right text-gray-600">
+                            {ing.quantity} {ing.measurement_unit}
+                          </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+          )}
         </div>
       </div>
+
+      {/* DESC  */}
+      <h3 className="font-semibold text-2xl  mb-2">Description</h3>
+      <p className="text-lg text-muted-foreground ">
+        {product.desc || "No description available."}
+      </p>
+
       <ProductRecommendationList
       title="Similar Products"
       endpoint={`/recommend/similar-products/${id}`}

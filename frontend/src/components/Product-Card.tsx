@@ -86,7 +86,7 @@ export function ProductCard({
 
         <div className="w-full flex items-center justify-between">
           <span className="font-bold text-lg text-primary">
-            ${Number(price).toFixed(2)}
+            {Intl.NumberFormat('vi-VN').format(Number(price))} VND
           </span>
           <Button
             size="sm"
