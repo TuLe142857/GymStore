@@ -2,4 +2,4 @@ from flask import Blueprint
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
-from . import dashboard, orders, catalog, products, system, uploads
+from . import dashboard, orders, catalog, products  , uploads, training

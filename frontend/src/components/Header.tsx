@@ -52,7 +52,7 @@ export default function Header() {
           {/* ✅ Admin Panel - chỉ hiện khi role là ADMIN */}
           {isLoggedIn && role === "ADMIN" && (
             <Link
-              to="/admin/orders"
+              to="/admin/statistics"
               className="flex items-center gap-1 text-red-500 font-semibold hover:text-red-700 transition"
               title="Go to Admin Dashboard"
             >
