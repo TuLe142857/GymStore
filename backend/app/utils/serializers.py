@@ -1,5 +1,9 @@
 #File này để quản lý việc chuyển đổi model sang JSON.
 from flask import url_for
+
+from app.models import Ingredient
+
+
 def serialize_product_list(p):
     """
     Serialize đối tượng Product cho chế độ xem danh sách (đơn giản).
@@ -83,7 +87,8 @@ def serialize_ingredient(pi):
     return {
         "id": pi.ingredient.id,
         "name": pi.ingredient.name,
-        "quantity": pi.quantity
+        "quantity": pi.quantity,
+        "measurement_unit": pi.ingredient.measurement_unit
     }
 
 def serialize_product_detail(p):
