@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllOrders, updateOrderStatus } from "@/api/adminOrdersApi";
-import type { Order, OrderStatus } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { fetchAllOrders, updateOrderStatus } from "@/api/adminOrdersApi.ts";
+import type { Order, OrderStatus } from "@/types.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select.tsx";
 import { toast } from "sonner";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/context/auth-context.tsx";
 import { Navigate } from "react-router-dom";
 
 const STATUS_OPTIONS: OrderStatus[] = ["PROCESSING", "DELIVERED", "CANCELLED"];
